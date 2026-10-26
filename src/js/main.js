@@ -2,13 +2,23 @@
   "use strict";
 
   const state = {
-    type: "municipal",
-    place: "Nova Esperança",
-    year: 2028,
+    type: "presidencial",
+    place: "Brasil",
+    year: 2026,
     electorate: 100000,
     turnout: 0.82,
-    parties: [],
-    candidates: [],
+    parties: [
+      { id: "preset-pt", name: "Partido dos Trabalhadores", acronym: "PT", color: "#e32636" },
+      { id: "preset-pl", name: "Partido Liberal", acronym: "PL", color: "#244a9b" },
+      { id: "preset-missao", name: "Missão", acronym: "MISSÃO", color: "#f2c230" },
+      { id: "preset-psd", name: "Partido Social Democrático", acronym: "PSD", color: "#168a54" }
+    ],
+    candidates: [
+      { id: "preset-lula", name: "Luiz Inácio Lula da Silva", partyId: "preset-pt", platform: "Educação e saúde" },
+      { id: "preset-flavio", name: "Flávio Bolsonaro", partyId: "preset-pl", platform: "Segurança pública" },
+      { id: "preset-renan", name: "Renan Santos", partyId: "preset-missao", platform: "Emprego e economia" },
+      { id: "preset-caiado", name: "Ronaldo Caiado", partyId: "preset-psd", platform: "Emprego e economia" }
+    ],
     countingStarted: false,
     percent: 0,
     votes: {},
@@ -103,6 +113,11 @@
     $("countingSubtitle").textContent = state.electorate.toLocaleString("pt-BR") +
       " eleitores cadastrados na simulação.";
     $("turnoutStat").textContent = Math.round(state.turnout * 100) + "%";
+    if (state.type === "municipal" && state.year === 2020) {
+      $("setupMessage").textContent = "Eleição municipal de 2020 selecionada. As candidaturas reais dependem do município; escolha a cidade e carregue os participantes correspondentes antes de iniciar.";
+    } else if (state.type === "presidencial" && state.year === 2026) {
+      $("setupMessage").textContent = "Catálogo presidencial de 2026 carregado para simulação. Os nomes pré-cadastrados não significam confirmação de registro oficial no TSE.";
+    }
     toast("Configuração salva!");
   });
 
