@@ -23,7 +23,8 @@
     percent: 0,
     votes: {},
     finalVotes: {},
-    debateDone: false
+    debateDone: false,
+    catalogMode: true
   };
 
   const $ = id => document.getElementById(id);
@@ -98,6 +99,21 @@
     });
   });
 
+  function loadPresidential2026Preset() {
+    state.parties = [
+      { id: "preset-pt", name: "Partido dos Trabalhadores", acronym: "PT", color: "#e32636" },
+      { id: "preset-pl", name: "Partido Liberal", acronym: "PL", color: "#244a9b" },
+      { id: "preset-missao", name: "Missão", acronym: "MISSÃO", color: "#f2c230" },
+      { id: "preset-psd", name: "Partido Social Democrático", acronym: "PSD", color: "#168a54" }
+    ];
+    state.candidates = [
+      { id: "preset-lula", name: "Luiz Inácio Lula da Silva", partyId: "preset-pt", platform: "Educação e saúde" },
+      { id: "preset-flavio", name: "Flávio Bolsonaro", partyId: "preset-pl", platform: "Segurança pública" },
+      { id: "preset-renan", name: "Renan Santos", partyId: "preset-missao", platform: "Emprego e economia" },
+      { id: "preset-caiado", name: "Ronaldo Caiado", partyId: "preset-psd", platform: "Emprego e economia" }
+    ];
+  }
+
   $("saveElection").addEventListener("click", () => {
     const checkedInput = document.querySelector('input[name="electionType"]:checked');
     state.type = checkedInput ? checkedInput.value : "municipal";
@@ -105,6 +121,17 @@
     state.year = Math.min(2100, Math.max(2026, Number($("electionYear").value) || 2028));
     state.electorate = Math.min(10000000, Math.max(1000, Number($("electorate").value) || 100000));
     state.turnout = Math.min(1, Math.max(0, Number($("turnout").value) || 0.82));
+
+    if (state.catalogMode) {
+      if (state.type === "presidencial" && state.year === 2026) {
+        loadPresidential2026Preset();
+      } else {
+        // O catálogo municipal é específico de cada cidade; não reutilize nomes presidenciais.
+        state.parties = [];
+        state.candidates = [];
+      }
+      renderPeople();
+    }
 
     resetCounting(true);
     $("setupMessage").textContent = "Eleição " + (state.type === "municipal" ? "municipal" : "presidencial") +
@@ -135,6 +162,7 @@
       return;
     }
 
+    state.catalogMode = false;
     state.parties.push({
       id: crypto.randomUUID(),
       name,
@@ -165,6 +193,7 @@
       return;
     }
 
+    state.catalogMode = false;
     state.candidates.push({
       id: crypto.randomUUID(),
       name,
@@ -218,6 +247,7 @@
           toast("Remova os candidatos desse partido primeiro.");
           return;
         }
+        state.catalogMode = false;
         state.parties = state.parties.filter(p => p.id !== id);
         renderPeople();
       });
@@ -225,6 +255,7 @@
 
     document.querySelectorAll("[data-remove-candidate]").forEach(button => {
       button.addEventListener("click", () => {
+        state.catalogMode = false;
         state.candidates = state.candidates.filter(c => c.id !== button.dataset.removeCandidate);
         resetCounting(true);
         renderPeople();
