@@ -1,0 +1,21 @@
+# Operating systems
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencies and environment
+node_modules/
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+*.log
+.tmp/
+temp/
