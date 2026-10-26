@@ -96,13 +96,13 @@
     state.electorate = Math.min(10000000, Math.max(1000, Number($("electorate").value) || 100000));
     state.turnout = Math.min(1, Math.max(0, Number($("turnout").value) || 0.82));
 
+    resetCounting(true);
     $("setupMessage").textContent = "Eleição " + (state.type === "municipal" ? "municipal" : "presidencial") +
       " configurada para " + state.place + ", " + state.year + ". Tudo pronto para montar a disputa.";
     $("countingTitle").textContent = "Eleição de " + state.year + " · " + state.place;
     $("countingSubtitle").textContent = state.electorate.toLocaleString("pt-BR") +
       " eleitores cadastrados na simulação.";
     $("turnoutStat").textContent = Math.round(state.turnout * 100) + "%";
-    resetCounting(true);
     toast("Configuração salva!");
   });
 
