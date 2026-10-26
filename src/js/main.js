@@ -24,7 +24,10 @@
     votes: {},
     finalVotes: {},
     debateDone: false,
-    catalogMode: true
+    catalogMode: true,
+    round: 1,
+    roundCandidates: null,
+    firstRoundResults: null
   };
 
   const $ = id => document.getElementById(id);
@@ -56,6 +59,9 @@
     state.percent = 0;
     state.votes = {};
     state.finalVotes = {};
+    const secondRoundButton = $("startSecondRound");
+    if (secondRoundButton) { secondRoundButton.hidden = true; secondRoundButton.disabled = true; }
+    if ($("roundMessage")) $("roundMessage").textContent = "A eleição começa no 1º turno. A possibilidade de 2º turno será avaliada ao fim da apuração.";
 
     if ($("percentCounted")) $("percentCounted").textContent = "0%";
     if ($("progressBar")) $("progressBar").style.width = "0%";
@@ -133,6 +139,9 @@
       renderPeople();
     }
 
+    state.round = 1;
+    state.roundCandidates = null;
+    state.firstRoundResults = null;
     resetCounting(true);
     $("setupMessage").textContent = "Eleição " + (state.type === "municipal" ? "municipal" : "presidencial") +
       " configurada para " + state.place + ", " + state.year + ". Tudo pronto para montar a disputa.";
@@ -320,12 +329,18 @@
     state.countingStarted = true;
     state.percent = 0;
     const totalVotes = Math.round(state.electorate * state.turnout);
-    const weights = state.candidates.map(() => Math.random() + 0.25);
+    const participants = getRoundCandidates();
+    const weights = participants.map(candidate => {
+      const party = state.parties.find(item => item.id === candidate.partyId);
+      const acronym = party ? party.acronym.toUpperCase() : "";
+      // PT e PL têm peso maior na simulação, sem garantir resultado político real.
+      return (acronym === "PT" || acronym === "PL" ? 5 : 0.35) + Math.random() * (acronym === "PT" || acronym === "PL" ? 1.2 : 0.9);
+    });
     const allocated = allocateVotes(totalVotes, weights);
 
     state.finalVotes = {};
     state.votes = {};
-    state.candidates.forEach((candidate, index) => {
+    participants.forEach((candidate, index) => {
       state.finalVotes[candidate.id] = allocated[index];
       state.votes[candidate.id] = 0;
     });
@@ -333,7 +348,7 @@
     $("startCount").disabled = true;
     $("nextBatch").disabled = false;
     $("resetCount").disabled = false;
-    $("countingTitle").textContent = "Apuração em andamento · " + state.place;
+    $("countingTitle").textContent = (state.round === 1 ? "1º turno · " : "2º turno · ") + state.place;
     $("countingSubtitle").textContent = "Apuração fictícia iniciada. Avance lote a lote para revelar os votos.";
     $("percentCounted").textContent = "0%";
     $("progressBar").style.width = "0%";
@@ -351,12 +366,13 @@
     const currentCounted = Math.round(totalVotes * state.percent / 100);
     const batchSize = currentCounted - previousCounted;
 
-    const remainingVotes = state.candidates.map(candidate =>
+    const participants = getRoundCandidates();
+    const remainingVotes = participants.map(candidate =>
       Math.max(0, state.finalVotes[candidate.id] - (state.votes[candidate.id] || 0))
     );
     const batchAllocation = allocateVotes(batchSize, remainingVotes);
 
-    state.candidates.forEach((candidate, index) => {
+    participants.forEach((candidate, index) => {
       state.votes[candidate.id] = (state.votes[candidate.id] || 0) + batchAllocation[index];
     });
 
@@ -369,9 +385,7 @@
 
     if (state.percent === 100) {
       $("nextBatch").disabled = true;
-      $("countingTitle").textContent = "Apuração finalizada · " + state.place;
-      $("countingSubtitle").textContent = "Total apurado: " + totalVotes.toLocaleString("pt-BR") +
-        " votos fictícios. Os resultados são exclusivos desta simulação.";
+      finishRound(totalVotes);
       toast("Apuração fictícia concluída!");
     } else {
       toast("Lote apurado: " + state.percent + "%");
@@ -380,12 +394,63 @@
 
   $("resetCount").addEventListener("click", () => resetCounting(false));
 
+  function getRoundCandidates() {
+    return state.roundCandidates || state.candidates;
+  }
+
+  function finishRound(totalVotes) {
+    const participants = getRoundCandidates();
+    const sorted = [...participants].sort((a, b) => (state.votes[b.id] || 0) - (state.votes[a.id] || 0));
+    const validVotes = sorted.reduce((sum, candidate) => sum + (state.votes[candidate.id] || 0), 0);
+    $("countingTitle").textContent = "Apuração do " + (state.round === 1 ? "1º" : "2º") + " turno finalizada · " + state.place;
+    $("countingSubtitle").textContent = "Total apurado: " + totalVotes.toLocaleString("pt-BR") + " votos fictícios. Resultado exclusivo da simulação.";
+    if (state.round === 2) {
+      const winner = sorted[0];
+      $("roundMessage").textContent = "Vencedor simulado do 2º turno: " + winner.name + " (" + (validVotes ? ((state.votes[winner.id] / validVotes) * 100).toFixed(1).replace(".", ",") : "0,0") + "% dos votos válidos).";
+      return;
+    }
+    state.firstRoundResults = sorted.map(candidate => ({ ...candidate, votes: state.votes[candidate.id] || 0 }));
+    const winner = sorted[0];
+    const winnerShare = validVotes ? (state.votes[winner.id] || 0) / validVotes : 0;
+    if (winnerShare > 0.5) {
+      $("roundMessage").textContent = winner.name + " venceu no 1º turno com mais de 50% dos votos válidos nesta simulação. Não haverá 2º turno.";
+      return;
+    }
+    const secondRoundAllowed = state.type === "presidencial" || (state.type === "municipal" && state.electorate > 200000);
+    if (!secondRoundAllowed) {
+      $("roundMessage").textContent = "Não há 2º turno para esta eleição municipal simulada: o município tem eleitorado de até 200 mil pessoas.";
+      return;
+    }
+    if (sorted.length < 2) {
+      $("roundMessage").textContent = "São necessários pelo menos dois candidatos para realizar o 2º turno.";
+      return;
+    }
+    $("roundMessage").textContent = "Sem maioria absoluta no 1º turno. Classificados para o 2º turno: " + sorted[0].name + " e " + sorted[1].name + ".";
+    const button = $("startSecondRound");
+    button.hidden = false;
+    button.disabled = false;
+  }
+
+  $("startSecondRound").addEventListener("click", () => {
+    if (state.round !== 1 || !state.firstRoundResults || state.firstRoundResults.length < 2) return;
+    state.roundCandidates = state.firstRoundResults.slice(0, 2).map(candidate => ({ ...candidate }));
+    state.round = 2;
+    resetCounting(true);
+    $("countingTitle").textContent = "2º turno · " + state.place;
+    $("countingSubtitle").textContent = "Disputa simulada entre " + state.roundCandidates.map(candidate => candidate.name).join(" e ") + ".";
+    $("roundMessage").textContent = "O 2º turno foi liberado. Inicie uma nova apuração para os dois finalistas.";
+    $("startSecondRound").hidden = true;
+    $("startCount").textContent = "Iniciar apuração do 2º turno";
+    showView("counting");
+  });
+
   function renderResults() {
     const results = $("resultsList");
     if (!results) return;
 
+    const participants = getRoundCandidates();
     const counted = Object.values(state.votes).reduce((sum, votes) => sum + votes, 0);
-    const sorted = [...state.candidates].sort((a, b) =>
+    const sorted = [...participants].sort((a, b) =>
       (state.votes[b.id] || 0) - (state.votes[a.id] || 0)
     );
 
@@ -405,5 +470,6 @@
     }).join("") || '<p class="empty">Cadastre candidatos para ver a apuração.</p>';
   }
 
+  loadPresidential2026Preset();
   renderPeople();
 })();
