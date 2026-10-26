@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c35">
+  <title>URNA — Simulador Eleitoral</title>
+  <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="URNA início"><span class="brand-mark">U</span><span>URNA <small>SIMULADOR ELEITORAL</small></span></a>
+    <span class="fiction-label">SIMULAÇÃO FICTÍCIA</span>
+  </header>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">CENTRAL DE OPERAÇÕES ELEITORAIS</p>
+        <h1>Acompanhe a eleição.<br><span>Entenda cada voto.</span></h1>
+        <p>Monte sua disputa, crie candidatos e partidos, participe de debates e observe uma apuração totalmente simulada.</p>
+      </div>
+      <div class="hero-stats"><div><strong id="candidateCount">0</strong><span>CANDIDATOS</span></div><div><strong id="partyCount">0</strong><span>PARTIDOS</span></div><div><strong id="turnoutStat">—</strong><span>COMPARECIMENTO</span></div></div>
+    </section>
+    <nav class="tabs" aria-label="Seções do jogo">
+      <button class="tab active" data-view="setup">01 · Eleição</button>
+      <button class="tab" data-view="people">02 · Partidos e candidatos</button>
+      <button class="tab" data-view="debate">03 · Debate</button>
+      <button class="tab" data-view="counting">04 · Apuração</button>
+    </nav>
+    <section class="view active" id="setup">
+      <div class="section-heading"><div><p class="eyebrow">CONFIGURAÇÃO</p><h2>Prepare a disputa</h2></div><span class="step">ETAPA 01 / 04</span></div>
+      <div class="panel">
+        <label for="electionType">Tipo de eleição</label>
+        <div class="choice-row"><label class="choice"><input type="radio" name="electionType" value="municipal" checked><span><b>🏙️ Municipal</b><small>Prefeitura da cidade</small></span></label><label class="choice"><input type="radio" name="electionType" value="presidencial"><span><b>🇧🇷 Presidencial</b><small>Presidência do país</small></span></label></div>
+        <div class="form-grid"><label>Nome da cidade ou país<input id="placeName" maxlength="60" value="Nova Esperança"></label><label>Ano da eleição<input id="electionYear" type="number" min="2026" max="2100" value="2028"></label><label>Eleitorado simulado<input id="electorate" type="number" min="1000" max="10000000" step="1000" value="100000"></label><label>Comparecimento estimado<select id="turnout"><option value="0.72">72% · Baixo</option><option value="0.82" selected>82% · Médio</option><option value="0.91">91% · Alto</option></select></label></div>
+        <button class="primary" id="saveElection">Salvar configuração <span>→</span></button>
+        <p class="hint" id="setupMessage">Os números são inventados pelo jogo e não correspondem a previsões reais.</p>
+      </div>
+      <div class="panel next-panel"><div><h3>Próximo passo</h3><p>Crie pelo menos dois candidatos para liberar o debate e a apuração.</p></div><button class="secondary" data-goto="people">Cadastrar participantes →</button></div>
+    </section>
+    <section class="view" id="people">
+      <div class="section-heading"><div><p class="eyebrow">MONTAGEM DA DISPUTA</p><h2>Partidos e candidatos</h2></div><span class="step">ETAPA 02 / 04</span></div>
+      <div class="two-col">
+        <form class="panel" id="partyForm"><h3>＋ Criar partido</h3><label>Nome do partido<input id="partyName" required maxlength="50" placeholder="Ex.: Partido do Horizonte"></label><label>Sigla<input id="partyAcronym" required maxlength="8" placeholder="Ex.: PH"></label><label>Cor da identidade<input id="partyColor" type="color" value="#3978e8"></label><button class="primary" type="submit">Adicionar partido</button></form>
+        <form class="panel" id="candidateForm"><h3>＋ Cadastrar candidato</h3><label>Nome do candidato<input id="candidateName" required maxlength="60" placeholder="Nome fictício"></label><label>Partido<select id="candidateParty" required><option value="">Crie um partido primeiro</option></select></label><label>Proposta principal<select id="candidatePlatform"><option>Educação e saúde</option><option>Emprego e economia</option><option>Segurança pública</option><option>Infraestrutura e transporte</option><option>Meio ambiente</option></select></label><button class="primary" type="submit">Adicionar candidato</button></form>
+      </div>
+      <div class="list-heading"><h3>Partidos registrados</h3><span id="partyListCount">0</span></div><div class="party-list" id="partyList"><p class="empty">Seus partidos aparecerão aqui.</p></div>
+      <div class="list-heading"><h3>Candidatos na disputa</h3><span id="candidateListCount">0</span></div><div class="candidate-list" id="candidateList"><p class="empty">Seus candidatos aparecerão aqui.</p></div>
+    </section>
+    <section class="view" id="debate">
+      <div class="section-heading"><div><p class="eyebrow">CAMPANHA</p><h2>Estúdio de debate</h2></div><span class="step">ETAPA 03 / 04</span></div>
+      <div class="panel debate-intro"><div class="mic-icon">◉</div><div><h3>O que os candidatos defendem?</h3><p>Escolha um tema e gere uma rodada fictícia de debate com base nas propostas cadastradas.</p></div></div>
+      <div class="panel"><label for="debateTopic">Tema da rodada</label><select id="debateTopic"><option>Educação e saúde</option><option>Emprego e economia</option><option>Segurança pública</option><option>Infraestrutura e transporte</option><option>Meio ambiente</option></select><button class="primary" id="runDebate">Iniciar rodada de debate →</button><div id="debateResults" class="debate-results"><p class="empty">A rodada aparecerá aqui quando você iniciar o debate.</p></div></div>
+    </section>
+    <section class="view" id="counting">
+      <div class="section-heading"><div><p class="eyebrow">NOITE ELEITORAL</p><h2>Sala de apuração</h2></div><span class="step">ETAPA 04 / 04</span></div>
+      <div class="counting-banner"><div><p class="eyebrow">APURAÇÃO SIMULADA</p><h3 id="countingTitle">Aguardando início</h3><p id="countingSubtitle">Configure a eleição e cadastre candidatos.</p></div><div class="counting-number"><strong id="percentCounted">0%</strong><span>SEÇÕES APURADAS</span></div></div>
+      <div class="progress-track"><div id="progressBar"></div></div>
+      <div class="counting-actions"><button class="primary" id="startCount">Iniciar apuração fictícia</button><button class="secondary" id="nextBatch" disabled>Apurar próximo lote +25%</button><button class="secondary" id="resetCount" disabled>Reiniciar</button></div>
+      <div class="results-list" id="resultsList"><p class="empty">A apuração ainda não começou.</p></div>
+      <p class="hint">Resultados gerados aleatoriamente para o jogo. Não são pesquisas, projeções ou resultados eleitorais reais.</p>
+    </section>
+    <footer><span>URNA · Protótipo jogável</span><span>Todos os candidatos e resultados são fictícios.</span></footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="src/js/main.js"></script>
+</body>
+</html>
