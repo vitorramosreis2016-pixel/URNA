@@ -17,7 +17,7 @@
       <div class="hero-copy">
         <p class="eyebrow">CENTRAL DE OPERAÇÕES ELEITORAIS</p>
         <h1>Acompanhe a eleição.<br><span>Entenda cada voto.</span></h1>
-        <p>Monte sua disputa, crie candidatos e partidos, participe de debates e observe uma apuração totalmente simulada.</p>
+        <p>Escolha participantes pré-cadastrados, acompanhe debates e observe uma apuração totalmente simulada. Criar os seus é opcional.</p>
       </div>
       <div class="hero-stats"><div><strong id="candidateCount">0</strong><span>CANDIDATOS</span></div><div><strong id="partyCount">0</strong><span>PARTIDOS</span></div><div><strong id="turnoutStat">—</strong><span>COMPARECIMENTO</span></div></div>
     </section>
@@ -31,8 +31,8 @@
       <div class="section-heading"><div><p class="eyebrow">CONFIGURAÇÃO</p><h2>Prepare a disputa</h2></div><span class="step">ETAPA 01 / 04</span></div>
       <div class="panel">
         <label for="electionType">Tipo de eleição</label>
-        <div class="choice-row"><label class="choice"><input type="radio" name="electionType" value="municipal" checked><span><b>🏙️ Municipal</b><small>Prefeitura da cidade</small></span></label><label class="choice"><input type="radio" name="electionType" value="presidencial"><span><b>🇧🇷 Presidencial</b><small>Presidência do país</small></span></label></div>
-        <div class="form-grid"><label>Nome da cidade ou país<input id="placeName" maxlength="60" value="Nova Esperança"></label><label>Ano da eleição<input id="electionYear" type="number" min="2026" max="2100" value="2028"></label><label>Eleitorado simulado<input id="electorate" type="number" min="1000" max="10000000" step="1000" value="100000"></label><label>Comparecimento estimado<select id="turnout"><option value="0.72">72% · Baixo</option><option value="0.82" selected>82% · Médio</option><option value="0.91">91% · Alto</option></select></label></div>
+        <div class="choice-row"><label class="choice"><input type="radio" name="electionType" value="municipal"><span><b>🏙️ Municipal</b><small>Prefeitura da cidade</small></span></label><label class="choice"><input type="radio" name="electionType" value="presidencial" checked><span><b>🇧🇷 Presidencial</b><small>Presidência do país</small></span></label></div>
+        <div class="form-grid"><label>Nome da cidade ou país<input id="placeName" maxlength="60" value="Brasil"></label><label>Ano da eleição<input id="electionYear" type="number" min="2026" max="2100" value="2026"></label><label>Eleitorado simulado<input id="electorate" type="number" min="1000" max="10000000" step="1000" value="100000"></label><label>Comparecimento estimado<select id="turnout"><option value="0.72">72% · Baixo</option><option value="0.82" selected>82% · Médio</option><option value="0.91">91% · Alto</option></select></label></div>
         <button class="primary" id="saveElection">Salvar configuração <span>→</span></button>
         <p class="hint" id="setupMessage">Os números são inventados pelo jogo e não correspondem a previsões reais.</p>
       </div>
@@ -40,10 +40,12 @@
     </section>
     <section class="view" id="people">
       <div class="section-heading"><div><p class="eyebrow">MONTAGEM DA DISPUTA</p><h2>Partidos e candidatos</h2></div><span class="step">ETAPA 02 / 04</span></div>
-      <div class="two-col">
+      <p class="hint preset-note">Participantes pré-carregados para a simulação presidencial de 2026: Lula (PT), Flávio Bolsonaro (PL), Renan Santos (Missão) e Ronaldo Caiado (PSD). Esta é uma seleção para o jogo, não uma confirmação de candidaturas oficialmente registradas. Para eleições municipais, os nomes dependem da cidade e do ano.</p>
+      <details class="create-options"><summary>＋ Criar partidos e candidatos próprios (opcional)</summary><div class="two-col">
         <form class="panel" id="partyForm"><h3>＋ Criar partido</h3><label>Nome do partido<input id="partyName" required maxlength="50" placeholder="Ex.: Partido do Horizonte"></label><label>Sigla<input id="partyAcronym" required maxlength="8" placeholder="Ex.: PH"></label><label>Cor da identidade<input id="partyColor" type="color" value="#3978e8"></label><button class="primary" type="submit">Adicionar partido</button></form>
         <form class="panel" id="candidateForm"><h3>＋ Cadastrar candidato</h3><label>Nome do candidato<input id="candidateName" required maxlength="60" placeholder="Nome fictício"></label><label>Partido<select id="candidateParty" required><option value="">Crie um partido primeiro</option></select></label><label>Proposta principal<select id="candidatePlatform"><option>Educação e saúde</option><option>Emprego e economia</option><option>Segurança pública</option><option>Infraestrutura e transporte</option><option>Meio ambiente</option></select></label><button class="primary" type="submit">Adicionar candidato</button></form>
       </div>
+      </div></details>
       <div class="list-heading"><h3>Partidos registrados</h3><span id="partyListCount">0</span></div><div class="party-list" id="partyList"><p class="empty">Seus partidos aparecerão aqui.</p></div>
       <div class="list-heading"><h3>Candidatos na disputa</h3><span id="candidateListCount">0</span></div><div class="candidate-list" id="candidateList"><p class="empty">Seus candidatos aparecerão aqui.</p></div>
     </section>
