@@ -65,7 +65,10 @@
 
     if ($("percentCounted")) $("percentCounted").textContent = "0%";
     if ($("progressBar")) $("progressBar").style.width = "0%";
-    if ($("startCount")) $("startCount").disabled = false;
+    if ($("startCount")) {
+      $("startCount").disabled = false;
+      $("startCount").textContent = state.round === 2 ? "Iniciar apuração do 2º turno" : "Iniciar apuração fictícia";
+    }
     if ($("nextBatch")) $("nextBatch").disabled = true;
     if ($("resetCount")) $("resetCount").disabled = true;
     if ($("countingTitle")) $("countingTitle").textContent = "Aguardando início";
