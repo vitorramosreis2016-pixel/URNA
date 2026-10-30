@@ -1,0 +1,1 @@
+export function candidatesForGovernor(state,office,stateName){if(!["governor","senator","federalDeputy","stateDeputy"].includes(office))return[];return state.candidates.filter(c=>c.office===office&&c.region.toLocaleLowerCase("pt-BR")===stateName.toLocaleLowerCase("pt-BR"));}export const STATE_OFFICES=["governor","senator","federalDeputy","stateDeputy"];
