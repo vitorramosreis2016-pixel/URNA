@@ -1,1 +1,22 @@
-import{allocateVotes}from"./election.js";export function distributeBatch(total,candidates,weights){if(candidates.length!==weights.length)throw new Error("Participantes e pesos incompatíveis.");return allocateVotes(total,weights);}export function calculatePercentages(votes){const total=votes.reduce((a,b)=>a+b,0);return votes.map(value=>({votes:value,percent:total?value/total*100:0}));}export function winnerOf(results){return [...results].sort((a,b)=>b.votes-a.votes)[0]||null;}
+import { allocateVotes } from "./election.js";
+
+export function distributeBatch(total, candidates, weights) {
+  if (candidates.length !== weights.length) {
+    throw new Error("Participantes e pesos incompatíveis.");
+  }
+
+  return allocateVotes(total, weights);
+}
+
+export function calculatePercentages(votes) {
+  const total = votes.reduce((sum, value) => sum + value, 0);
+
+  return votes.map(value => ({
+    votes: value,
+    percent: total ? value / total * 100 : 0
+  }));
+}
+
+export function winnerOf(results) {
+  return [...results].sort((a, b) => b.votes - a.votes)[0] || null;
+}
