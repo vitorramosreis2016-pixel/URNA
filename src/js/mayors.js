@@ -1,0 +1,1 @@
+export function candidatesForMunicipality(state,office,municipality){if(!["mayor","councilor"].includes(office))return[];return state.candidates.filter(c=>c.office===office&&c.region.toLocaleLowerCase("pt-BR")===municipality.toLocaleLowerCase("pt-BR"));}export const MUNICIPAL_OFFICES=["mayor","councilor"];
