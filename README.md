@@ -1,25 +1,32 @@
 # URNA — Simulador Eleitoral
 
-Um jogo de simulação eleitoral fictícia. Você acompanha a campanha como observador: cria partidos e candidatos, organiza debates e acompanha uma apuração simulada.
+Jogo de simulação eleitoral fictícia. O jogador configura disputas, cria partidos e candidatos, acompanha debates e observa uma apuração simulada.
 
-## Modos planejados
+## Cargos previstos na arquitetura
+- Presidente (nacional)
+- Governador, senador, deputado federal e deputado estadual (estadual)
+- Prefeito e vereador (municipal)
 
-- **Municipal:** eleição para prefeitura.
-- **Presidencial:** eleição para presidência.
-- **Editor de partidos e candidatos:** crie seus próprios participantes.
-- **Debates:** escolha temas e acompanhe as posições dos candidatos.
-- **Apuração:** acompanhe a contagem fictícia por regiões e atualizações percentuais.
+## Executar
+Abra a pasta do projeto em um servidor local (módulos ES precisam de origem HTTP):
+```bash
+python3 -m http.server 8000
+```
+Acesse http://localhost:8000.
 
-> Este projeto é uma simulação para entretenimento e aprendizado. Os candidatos, partidos e resultados gerados pelo jogo são fictícios e não representam pesquisas nem resultados eleitorais reais.
+## Estrutura modular
+- `main.js`: interface e coordenação do jogo existente.
+- `election.js`: configuração eleitoral, distribuição de votos e elegibilidade de segundo turno.
+- `parties.js`: criação e remoção segura de partidos.
+- `candidates.js`: cargos e cadastro/consulta de candidaturas.
+- `debates.js`: argumentos e seleção de participantes de debates.
+- `apuration.js`: distribuição de lotes e cálculo de percentuais.
+- `governors.js`: disputas estaduais.
+- `mayors.js`: disputas municipais.
+- `legislature.js`: cargos legislativos e distribuição inicial de cadeiras.
+- `campaign.js`: efeitos de ações de campanha.
 
-## Como jogar
+## Estado atual
+A interface original foi preservada e o projeto recebeu a primeira camada de lógica modular. Os módulos de cargos estaduais/municipais e legislativos estão preparados como base de domínio; a próxima etapa é conectar os formulários da interface a esses módulos para cadastrar candidaturas por cargo e apurar cada disputa separadamente.
 
-Abra `index.html` no navegador. Não precisa instalar dependências nem executar servidor.
-
-## Tecnologias
-
-HTML, CSS e JavaScript puro.
-
-## Estado do projeto
-
-MVP inicial: configurar uma eleição, cadastrar partidos e candidatos, realizar um debate simples e gerar uma apuração fictícia.
+Todos os resultados são aleatórios e fictícios. Não representam pesquisas, previsões ou resultados eleitorais reais.
