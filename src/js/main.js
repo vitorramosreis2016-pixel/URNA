@@ -12,13 +12,29 @@ import { getSecondRoundEligibility } from "./election.js";
       { id: "preset-pt", name: "Partido dos Trabalhadores", acronym: "PT", color: "#e32636" },
       { id: "preset-pl", name: "Partido Liberal", acronym: "PL", color: "#244a9b" },
       { id: "preset-missao", name: "Missão", acronym: "MISSÃO", color: "#f2c230" },
-      { id: "preset-psd", name: "Partido Social Democrático", acronym: "PSD", color: "#168a54" }
+      { id: "preset-psd", name: "Partido Social Democrático", acronym: "PSD", color: "#168a54" },
+      { id: "preset-avante", name: "Avante", acronym: "AVANTE", color: "#1687b8" },
+      { id: "preset-novo", name: "Partido Novo", acronym: "NOVO", color: "#f28c28" },
+      { id: "preset-dc", name: "Democracia Cristã", acronym: "DC", color: "#2855a6" },
+      { id: "preset-up", name: "Unidade Popular", acronym: "UP", color: "#d52b2b" },
+      { id: "preset-pstu", name: "Partido Socialista dos Trabalhadores Unificado", acronym: "PSTU", color: "#b51f2b" },
+      { id: "preset-pcb", name: "Partido Comunista Brasileiro", acronym: "PCB", color: "#b82c2c" },
+      { id: "preset-pco", name: "Partido da Causa Operária", acronym: "PCO", color: "#c62828" },
+      { id: "preset-democrata", name: "Democrata", acronym: "DEMOCRATA", color: "#5b6f91" }
     ],
     candidates: [
-      { id: "preset-lula", name: "Luiz Inácio Lula da Silva", partyId: "preset-pt", platform: "Educação e saúde" },
-      { id: "preset-flavio", name: "Flávio Bolsonaro", partyId: "preset-pl", platform: "Segurança pública" },
+      { id: "preset-lula", name: "Luiz Inácio Lula da Silva", partyId: "preset-pt", ballotNumber: "13", platform: "Educação e saúde" },
+      { id: "preset-flavio", name: "Flávio Bolsonaro", partyId: "preset-pl", ballotNumber: "22", platform: "Segurança pública" },
       { id: "preset-renan", name: "Renan Santos", partyId: "preset-missao", platform: "Emprego e economia" },
-      { id: "preset-caiado", name: "Ronaldo Caiado", partyId: "preset-psd", platform: "Emprego e economia" }
+      { id: "preset-caiado", name: "Ronaldo Caiado", partyId: "preset-psd", platform: "Emprego e economia" },
+      { id: "preset-augusto-cury", name: "Augusto Cury", partyId: "preset-avante", ballotNumber: "70", platform: "Terceira via; propostas a definir" },
+      { id: "preset-zema", name: "Romeu Zema", partyId: "preset-novo", ballotNumber: "30", platform: "Propostas a definir" },
+      { id: "preset-clariana", name: "Clariana Barão", partyId: "preset-dc", ballotNumber: "27", platform: "Propostas a definir" },
+      { id: "preset-samara", name: "Samara Martins", partyId: "preset-up", ballotNumber: "80", platform: "Movimentos sociais e pautas de esquerda" },
+      { id: "preset-hertz", name: "Hertz Dias", partyId: "preset-pstu", ballotNumber: "16", platform: "Propostas socialistas" },
+      { id: "preset-edmilson", name: "Edmilson Costa", partyId: "preset-pcb", ballotNumber: "21", platform: "Propostas comunistas" },
+      { id: "preset-rui", name: "Rui Costa Pimenta", partyId: "preset-pco", ballotNumber: "29", platform: "Causa operária" },
+      { id: "preset-wilson", name: "Wilson Grassi", partyId: "preset-democrata", ballotNumber: "35", platform: "Bem-estar e defesa dos animais" }
     ],
     countingStarted: false,
     percent: 0,
@@ -114,13 +130,29 @@ import { getSecondRoundEligibility } from "./election.js";
       { id: "preset-pt", name: "Partido dos Trabalhadores", acronym: "PT", color: "#e32636" },
       { id: "preset-pl", name: "Partido Liberal", acronym: "PL", color: "#244a9b" },
       { id: "preset-missao", name: "Missão", acronym: "MISSÃO", color: "#f2c230" },
-      { id: "preset-psd", name: "Partido Social Democrático", acronym: "PSD", color: "#168a54" }
+      { id: "preset-psd", name: "Partido Social Democrático", acronym: "PSD", color: "#168a54" },
+      { id: "preset-avante", name: "Avante", acronym: "AVANTE", color: "#1687b8" },
+      { id: "preset-novo", name: "Partido Novo", acronym: "NOVO", color: "#f28c28" },
+      { id: "preset-dc", name: "Democracia Cristã", acronym: "DC", color: "#2855a6" },
+      { id: "preset-up", name: "Unidade Popular", acronym: "UP", color: "#d52b2b" },
+      { id: "preset-pstu", name: "Partido Socialista dos Trabalhadores Unificado", acronym: "PSTU", color: "#b51f2b" },
+      { id: "preset-pcb", name: "Partido Comunista Brasileiro", acronym: "PCB", color: "#b82c2c" },
+      { id: "preset-pco", name: "Partido da Causa Operária", acronym: "PCO", color: "#c62828" },
+      { id: "preset-democrata", name: "Democrata", acronym: "DEMOCRATA", color: "#5b6f91" }
     ];
     state.candidates = [
-      { id: "preset-lula", name: "Luiz Inácio Lula da Silva", partyId: "preset-pt", platform: "Educação e saúde" },
-      { id: "preset-flavio", name: "Flávio Bolsonaro", partyId: "preset-pl", platform: "Segurança pública" },
+      { id: "preset-lula", name: "Luiz Inácio Lula da Silva", partyId: "preset-pt", ballotNumber: "13", platform: "Educação e saúde" },
+      { id: "preset-flavio", name: "Flávio Bolsonaro", partyId: "preset-pl", ballotNumber: "22", platform: "Segurança pública" },
       { id: "preset-renan", name: "Renan Santos", partyId: "preset-missao", platform: "Emprego e economia" },
-      { id: "preset-caiado", name: "Ronaldo Caiado", partyId: "preset-psd", platform: "Emprego e economia" }
+      { id: "preset-caiado", name: "Ronaldo Caiado", partyId: "preset-psd", platform: "Emprego e economia" },
+      { id: "preset-augusto-cury", name: "Augusto Cury", partyId: "preset-avante", ballotNumber: "70", platform: "Terceira via; propostas a definir" },
+      { id: "preset-zema", name: "Romeu Zema", partyId: "preset-novo", ballotNumber: "30", platform: "Propostas a definir" },
+      { id: "preset-clariana", name: "Clariana Barão", partyId: "preset-dc", ballotNumber: "27", platform: "Propostas a definir" },
+      { id: "preset-samara", name: "Samara Martins", partyId: "preset-up", ballotNumber: "80", platform: "Movimentos sociais e pautas de esquerda" },
+      { id: "preset-hertz", name: "Hertz Dias", partyId: "preset-pstu", ballotNumber: "16", platform: "Propostas socialistas" },
+      { id: "preset-edmilson", name: "Edmilson Costa", partyId: "preset-pcb", ballotNumber: "21", platform: "Propostas comunistas" },
+      { id: "preset-rui", name: "Rui Costa Pimenta", partyId: "preset-pco", ballotNumber: "29", platform: "Causa operária" },
+      { id: "preset-wilson", name: "Wilson Grassi", partyId: "preset-democrata", ballotNumber: "35", platform: "Bem-estar e defesa dos animais" }
     ];
   }
 
@@ -247,6 +279,7 @@ import { getSecondRoundEligibility } from "./election.js";
           return '<div class="candidate-card"><span class="color-dot" style="background:' +
             (party ? party.color : "#68758b") + '"></span><div class="item-info"><strong>' +
             escapeHtml(c.name) + "</strong><small>" +
+            (c.ballotNumber ? "Nº " + escapeHtml(c.ballotNumber) + " · " : "") +
             escapeHtml(party ? party.acronym + " · " + party.name : "Sem partido") +
             " · Proposta: " + escapeHtml(c.platform) +
             '</small></div><button class="remove-btn" data-remove-candidate="' + c.id + '">Excluir</button></div>';
