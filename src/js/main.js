@@ -176,6 +176,7 @@ import { getSecondRoundEligibility } from "./election.js";
     }
 
     state.round = 1;
+    $("runDebate").textContent = "Iniciar rodada de debate →";
     state.roundCandidates = null;
     state.firstRoundResults = null;
     resetCounting(true);
@@ -333,14 +334,15 @@ import { getSecondRoundEligibility } from "./election.js";
   };
 
   $("runDebate").addEventListener("click", () => {
-    if (state.candidates.length < 2) {
+    const participants = getRoundCandidates();
+    if (participants.length < 2) {
       toast("Cadastre pelo menos dois candidatos para o debate.");
       return;
     }
 
     const topic = $("debateTopic").value;
-    const shuffled = [...state.candidates].sort(() => Math.random() - 0.5);
-    $("debateResults").innerHTML = shuffled.map((candidate, index) => {
+    const shuffled = [...participants].sort(() => Math.random() - 0.5);
+    const speeches = shuffled.map(candidate => {
       const party = state.parties.find(p => p.id === candidate.partyId);
       const options = talkingPoints[topic] || talkingPoints["Educação e saúde"];
       const argument = options[Math.floor(Math.random() * options.length)];
@@ -350,10 +352,25 @@ import { getSecondRoundEligibility } from "./election.js";
         escapeHtml(topic.toLowerCase()) + ", " + argument + ". A proposta de campanha é " +
         escapeHtml(candidate.platform.toLowerCase()) +
         ", com prestação de contas à população.</p></article>";
-    }).join("");
+    });
+
+    const moments = [
+      "O mediador interrompe para lembrar que cada candidato tem o mesmo tempo de resposta.",
+      "Um candidato pede direito de resposta após uma crítica; o mediador concede uma réplica curta.",
+      "Os dois candidatos apresentam propostas diferentes e precisam explicar como seriam financiadas.",
+      "O mediador faz uma pergunta direta aos dois: qual seria a primeira medida do governo?",
+      "Um candidato reconhece um ponto válido na fala do adversário, mas discorda da solução apresentada.",
+      "O tempo termina durante uma resposta, e o mediador passa a palavra ao próximo candidato."
+    ];
+    const moment = moments[Math.floor(Math.random() * moments.length)];
+    const roundLabel = state.round === 2 ? "Debate do 2º turno" : "Debate do 1º turno";
+    const momentTitle = state.round === 2 ? "Momento decisivo do segundo debate" : "Momento do debate";
+    $("debateResults").innerHTML =
+      '<div class="speech"><strong>' + roundLabel + ' · ' + escapeHtml(topic) +
+      '</strong><p>' + momentTitle + ': ' + moment + '</p></div>' + speeches.join("");
 
     state.debateDone = true;
-    toast("Rodada de debate concluída!");
+    toast(roundLabel + " concluído!");
   });
 
   $("startCount").addEventListener("click", () => {
@@ -473,6 +490,7 @@ import { getSecondRoundEligibility } from "./election.js";
     state.roundCandidates = state.firstRoundResults.slice(0, 2).map(candidate => ({ ...candidate }));
     state.round = 2;
     resetCounting(true);
+    $("runDebate").textContent = "Iniciar debate do 2º turno →";
     $("countingTitle").textContent = "2º turno · " + state.place;
     $("countingSubtitle").textContent = "Disputa simulada entre " + state.roundCandidates.map(candidate => candidate.name).join(" e ") + ".";
     $("roundMessage").textContent = "O 2º turno foi liberado. Inicie uma nova apuração para os dois finalistas.";
