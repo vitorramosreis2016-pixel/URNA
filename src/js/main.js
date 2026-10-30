@@ -1,3 +1,4 @@
+import { getSecondRoundEligibility } from "./election.js";
 (() => {
   "use strict";
 
@@ -419,7 +420,7 @@
       $("roundMessage").textContent = winner.name + " venceu no 1º turno com mais de 50% dos votos válidos nesta simulação. Não haverá 2º turno.";
       return;
     }
-    const secondRoundAllowed = state.type === "presidencial" || (state.type === "municipal" && state.electorate > 200000);
+    const secondRoundAllowed = getSecondRoundEligibility(state.type, state.electorate);
     if (!secondRoundAllowed) {
       $("roundMessage").textContent = "Não há 2º turno para esta eleição municipal simulada: o município tem eleitorado de até 200 mil pessoas.";
       return;
